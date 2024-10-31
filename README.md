@@ -8,26 +8,26 @@
 * Goal is to minimize mean squared error
 
 ## The cities
-Anchorage       PANC
-Boise           KBOI
-Chicago         KORD
-Denver          KDEN
-Detroit         KDTW
-Honolulu        PHNL
-Houston         KIAH
-Miami           KMIA
-Minneapolis     KMSP
-Oklahoma City   KOKC
-Nashville       KBNA
-New York        KJFK
-Phoenix         KPHX
-Portland ME     KPWM
-Portland OR     KPDX
-Salt Lake City  KSLC
-San Diego       KSAN
-San Francisco   KSFO
-Seattle         KSEA
-Washington DC   KDCA
+* Anchorage       PANC
+* Boise           KBOI
+* Chicago         KORD
+* Denver          KDEN
+* Detroit         KDTW
+* Honolulu        PHNL
+* Houston         KIAH
+* Miami           KMIA
+* Minneapolis     KMSP
+* Oklahoma City   KOKC
+* Nashville       KBNA
+* New York        KJFK
+* Phoenix         KPHX
+* Portland ME     KPWM
+* Portland OR     KPDX
+* Salt Lake City  KSLC
+* San Diego       KSAN
+* San Francisco   KSFO
+* Seattle         KSEA
+* Washington DC   KDCA
 
 ## Project timeline
 * Monday, Nov 25: Model finalized, code committed to Github, Docker image uploaded to Dockerhub
