@@ -9,8 +9,10 @@
 
 # Docker
 Here's a pretty comprehensive explanation of how the Docker stuff works here. First, to use docker you need to start the docker engine, so download Docker Desktop and launch it before using any of the docker commands. So that people don't have to interface with docker that much, I just have commands in the makefile that will do what you need. 
+
 * `make docker-pull` will pull the current docker image. You want to do this before running any predictions in docker, but if you're just modifying code in the GitHub, you don't need to do this.
-* `make docker-push` will login to docker, build the image based on the current state of the repo, and push it to our dockerhub. You should run this whenever you make a significant modification to the GitHub so that our docker image is up to date. It's not super necessary for every little change, but definitely do this after you're done modifying the repo in one sitting.
+* `make docker-push` will login to docker, build the image based on the current state of the repo, and push it to our dockerhub. You should run this whenever you make a significant modification to the GitHub so that our docker image is up to date. It's not super necessary for every little change, but definitely do this after you're done modifying the repo in one sitting.  
+
 In addition, I have the make predictions command working right now with temporary files that you can use to see the functionality right now, but once that code is less temporary, you should change the Makefile targets or let me know and I can tend to the Makefiles.
 
 Happy Dockering -Julian
