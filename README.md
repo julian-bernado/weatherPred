@@ -7,6 +7,9 @@
 ## Next Meeting
 - Meet on Wednesday, November 5th 3:30pm - 5pm
 
+# Docker
+Here's a pretty comprehensive explanation of how the Docker stuff works here.
+
 # Project Overview
 * Predict the minimum, average, and maximum daily temperature (in Fahrenheit) at each of 20 cities
 * Predictions should be made 1, 2, 3, 4, and 5 days ahead, every day from Tuesday, November 26 to Wednesday, December 4 (inclusive).
