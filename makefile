@@ -6,11 +6,12 @@
 
 # Directories
 MODEL_DIR := model
-DATA_DIR := predictions
+PREDICTIONS_DIR := predictions
+DATA_DIR := data
 
 # Python Script and Output
 PREDICT_SCRIPT := $(MODEL_DIR)/test_predictions.py
-OUTPUT_FILE := $(DATA_DIR)/test_predictions.csv
+OUTPUT_FILE := $(PREDICTIONS_DIR)/test_predictions.csv
 
 # Python Interpreter (modify if needed)
 PYTHON := python3
@@ -23,7 +24,7 @@ DOCKER_FULL_TAG := $(DOCKER_IMAGE):$(DOCKER_TAG)
 # ========================================
 # Phony Targets
 # ========================================
-.PHONY: all predictions clean docker-pull docker-push
+.PHONY: all predictions clean docker-pull docker-push raw_data
 
 # ========================================
 # Default Target
@@ -41,9 +42,22 @@ $(OUTPUT_FILE): $(PREDICT_SCRIPT)
 	@cat $(OUTPUT_FILE)
 
 # ========================================
+# Raw Data Target: deletes raw_data if it exists and runs scraper.py
+# ========================================
+raw_data:
+	@echo "Removing raw data..."
+	rm -rf $(DATA_DIR)/raw_data
+	@echo "Running scraper.py..."
+	$(PYTHON) $(DATA_DIR)/scraper.py
+
+
+# ========================================
 # Clean Target
 # ========================================
 clean:
+	@echo "Removing raw and processed data..."
+	rm -rf $(DATA_DIR)/raw_data
+	rm -rf $(DATA_DIR)/processed_data
 	@echo "Removing $(OUTPUT_FILE)..."
 	rm -f $(OUTPUT_FILE)
 
