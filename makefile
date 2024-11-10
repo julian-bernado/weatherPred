@@ -24,7 +24,7 @@ DOCKER_FULL_TAG := $(DOCKER_IMAGE):$(DOCKER_TAG)
 # ========================================
 # Phony Targets
 # ========================================
-.PHONY: all predictions clean docker-pull docker-push raw_data
+.PHONY: all predictions clean docker-pull docker-push raw_data process_data
 
 # ========================================
 # Default Target
@@ -49,6 +49,15 @@ raw_data:
 	rm -rf $(DATA_DIR)/raw_data
 	@echo "Running scraper.py..."
 	$(PYTHON) $(DATA_DIR)/scraper.py
+
+# ========================================
+# process_data Target: runs data processing scripts (noaa_processor.py)
+# ========================================
+process_data:
+	@echo "Removing processed data..."
+	rm -rf $(DATA_DIR)/processed_data
+	@echo "Running noaa_processor.py..."
+	$(PYTHON) $(DATA_DIR)/noaa_processor.py
 
 
 # ========================================

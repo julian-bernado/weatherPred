@@ -5,8 +5,8 @@ import os
 import pandas as pd
 
 # base filepath for the NOAA data
-noaa_base_path = "./raw_data/noaa"
-noaa_out_path = "./processed_data/noaa"
+noaa_base_path = os.path.join(os.path.dirname(__file__), "raw_data", "noaa")
+noaa_out_path = os.path.join(os.path.dirname(__file__), "processed_data", "noaa")
 
 # data spec from https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/readme.txt
 
