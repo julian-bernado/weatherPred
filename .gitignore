@@ -489,3 +489,4 @@ cython_debug/
 *.iml
 *.iws
 *.ipr
+/data/raw_data

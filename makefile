@@ -24,7 +24,7 @@ DOCKER_FULL_TAG := $(DOCKER_IMAGE):$(DOCKER_TAG)
 # ========================================
 # Phony Targets
 # ========================================
-.PHONY: all predictions clean docker-pull docker-push raw_data process_data
+.PHONY: all predictions clean docker-pull docker-push raw_data convert_data
 
 # ========================================
 # Default Target
@@ -51,15 +51,15 @@ raw_data:
 	$(PYTHON) $(DATA_DIR)/scraper.py
 
 # ========================================
-# process_data Target: runs data processing scripts (noaa_processor.py)
+# process_data Target: runs data processing scripts (noaa_converter.py)
 # ========================================
-process_data:
+convert_data:
 	@echo "Removing processed data..."
-	rm -rf $(DATA_DIR)/processed_data
-	@echo "Running noaa_processor.py..."
-	$(PYTHON) $(DATA_DIR)/noaa_processor.py
+	rm -rf $(DATA_DIR)/raw_data/noaa/to_csv
+	@echo "Running noaa_converter.py..."
+	$(PYTHON) $(DATA_DIR)/noaa_converter.py
 
-data: raw_data process_data
+data: raw_data convert_data
 
 # ========================================
 # Clean Target

@@ -5,8 +5,8 @@ import os
 import pandas as pd
 
 # base filepath for the NOAA data
-noaa_base_path = os.path.join(os.path.dirname(__file__), "raw_data", "noaa")
-noaa_out_path = os.path.join(os.path.dirname(__file__), "processed_data", "noaa")
+noaa_in_path = os.path.join(os.path.dirname(__file__), "raw_data/noaa")
+noaa_out_path = os.path.join(os.path.dirname(__file__), "raw_data/noaa/to_csv")
 
 # data spec from https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/readme.txt
 
@@ -118,6 +118,7 @@ def read_metadata(file_path: str) -> pd.DataFrame:
         header=None,
         names=["ID", "LATITUDE", "LONGITUDE", "ELEVATION", "STATE", "NAME", "GSN_FLAG", "HCN_CRN_FLAG", "WMO_ID"]
     )
+    # drop the flags columns
     return df[["ID", "LATITUDE", "LONGITUDE", "ELEVATION", "STATE", "NAME"]]
 
 
@@ -126,18 +127,21 @@ if __name__ == '__main__':
     if not os.path.exists(noaa_out_path):
         os.makedirs(noaa_out_path)
     # for each file in the noaa directory
-    for file in os.listdir(noaa_base_path):
+    for file in os.listdir(noaa_in_path):
+        # skip the file if it is a directory
+        if os.path.isdir(f"{noaa_in_path}/{file}"):
+            continue
         # if the file is not a .dly (i.e. metadata  txt file)
-        if not file.endswith(".dly"):
+        elif not file.endswith(".dly"):
             # read the file
-            data = read_metadata(f"{noaa_base_path}/{file}")
+            data = read_metadata(f"{noaa_in_path}/{file}")
             # save the file to csv format
             data.to_csv(f"{noaa_out_path}/{file.replace('.txt', '.csv')}", index=False)
-            print(f"Processed {file} into {file.replace('.txt', '.csv')}")
+            print(f"Converted {file} to {file.replace('.txt', '.csv')}")
         # if the file is a .dly file
         else:
             # read the file
-            data = read_dly_file(f"{noaa_base_path}/{file}")
+            data = read_dly_file(f"{noaa_in_path}/{file}")
             # save the file to csv format
             data.to_csv(f"{noaa_out_path}/{file.replace('.dly', '.csv')}", index=False)
-            print(f"Processed {file} into {file.replace('.dly', '.csv')}")
+            print(f"Converted {file} to {file.replace('.dly', '.csv')}")
