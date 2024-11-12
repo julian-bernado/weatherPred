@@ -4,11 +4,6 @@
 import os
 import requests
 
-# Base path for the NOAA data (get folder in which this file is located)
-out_noaa_path = os.path.join(os.path.dirname(__file__), 'raw_data', 'noaa')
-# Base URL for the NOAA data
-base_noaa_url = 'https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/all'
-
 # Dictionary mapping city names to airport codes
 city_to_airport = {
     "Anchorage": "PANC",
@@ -42,7 +37,7 @@ airport_to_noaa = {
     "PHNL": "USW00022521",
     "KIAH": "USW00012960",
     "KMIA": "USW00012839",
-    "KMIC": "USW00094960",
+    "KMIC": "USW00014922", # #"USW00094960",
     "KOKC": "USW00013967",
     "KBNA": "USW00013897",
     "KJFK": "USW00094789",
@@ -56,10 +51,18 @@ airport_to_noaa = {
     "KDCA": "USW00013743",
 }
 
-if __name__ == '__main__':
+
+# Function to download NOAA data for a list of weather stations
+def noaa_scraper(filepath: str = 'raw_data/noaa') -> None:
+    """
+    :param filepath:
+    :return:
+    """
+    # Base URL for the NOAA data
+    base_noaa_url = 'https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/all'
     # Create the output directory if it doesn't exist
-    if not os.path.exists(out_noaa_path):
-        os.makedirs(out_noaa_path)
+    if not os.path.exists(filepath):
+        os.makedirs(filepath)
     # Loop over the city names and airport codes
     for city, airport in city_to_airport.items():
         print(f"Downloading data for {city}")
@@ -67,6 +70,31 @@ if __name__ == '__main__':
         # Download the data
         response = requests.get(url)
         # Save the data to a file
-        with open(f"{out_noaa_path}/{airport}.dly", 'wb') as f:
+        with open(f"{filepath}/{airport}.dly", 'wb') as f:
             f.write(response.content)
-    print("Downloaded all data")
+    print("Downloaded NOAA data")
+
+
+# Function to download geospatial coordinates for a list of weather stations
+def get_noaa_stations_gps(filepath: str = 'raw_data/noaa') -> None:
+    """
+    :param filepath:
+    :return:
+    """
+    # URL for the NOAA station metadata
+    noaa_stations_url = 'https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/ghcnd-stations.txt'
+    # Download the station metadata
+    response = requests.get(noaa_stations_url)
+    # Save the station metadata to a file
+    with open(f"{filepath}/ghcnd-stations.txt", 'wb') as f:
+        f.write(response.content)
+    print("Downloaded NOAA station metadata")
+
+
+if __name__ == '__main__':
+    # Base path for the NOAA data (get folder in which this file is located)
+    out_noaa_path = os.path.join(os.path.dirname(__file__), 'raw_data/noaa')
+    # Run the scraper
+    noaa_scraper(out_noaa_path)
+    # Run the station metadata downloader
+    get_noaa_stations_gps(out_noaa_path)

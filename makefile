@@ -59,6 +59,7 @@ process_data:
 	@echo "Running noaa_processor.py..."
 	$(PYTHON) $(DATA_DIR)/noaa_processor.py
 
+data: raw_data process_data
 
 # ========================================
 # Clean Target

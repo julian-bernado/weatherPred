@@ -67,8 +67,11 @@ data_day_col_specs = [item for sublist in data_day_col_specs for item in sublist
 data_dtypes = {**data_header_dtypes, **{k: v for d in data_col_dtypes for k, v in d.items()}}
 
 # function to read a .dly file from NOAA and return a DataFrame
-def read_dly_file(file_path):
-    """Read a .dly file from NOAA and return a DataFrame."""
+def read_dly_file(file_path: str) -> pd.DataFrame:
+    """
+    :param file_path: path to the .dly file
+    :return: DataFrame with the data
+    """
     # read the file
     df = pd.read_fwf(
         file_path,
@@ -102,14 +105,39 @@ def read_dly_file(file_path):
     df = df.pivot(index=["STATION_ID", "YEAR", "MONTH", "DAY", "DATE"], columns="ELEMENT", values="VALUE").reset_index()
     return df
 
+# Function to process metadata of geolocations of the weather stations
+def read_metadata(file_path: str) -> pd.DataFrame:
+    """
+    :param file_path: path to the .txt file
+    :return: DataFrame
+    """
+    # read the file
+    df = pd.read_fwf(
+        file_path,
+        colspecs=[(0, 11), (12, 20), (21, 30), (31, 37), (38, 40), (41, 71), (72, 75), (76, 79), (80, 85)],
+        header=None,
+        names=["ID", "LATITUDE", "LONGITUDE", "ELEVATION", "STATE", "NAME", "GSN_FLAG", "HCN_CRN_FLAG", "WMO_ID"]
+    )
+    return df[["ID", "LATITUDE", "LONGITUDE", "ELEVATION", "STATE", "NAME"]]
+
+
 if __name__ == '__main__':
     # create the output directory if it doesn't exist
     if not os.path.exists(noaa_out_path):
         os.makedirs(noaa_out_path)
     # for each file in the noaa directory
     for file in os.listdir(noaa_base_path):
-        # read the file
-        data = read_dly_file(f"{noaa_base_path}/{file}")
-        # save the file to csv format
-        data.to_csv(f"{noaa_out_path}/{file.replace('.dly', '.csv')}", index=False)
-        print(f"Processed {file} into {file.replace('.dly', '.csv')}")
+        # if the file is not a .dly (i.e. metadata  txt file)
+        if not file.endswith(".dly"):
+            # read the file
+            data = read_metadata(f"{noaa_base_path}/{file}")
+            # save the file to csv format
+            data.to_csv(f"{noaa_out_path}/{file.replace('.txt', '.csv')}", index=False)
+            print(f"Processed {file} into {file.replace('.txt', '.csv')}")
+        # if the file is a .dly file
+        else:
+            # read the file
+            data = read_dly_file(f"{noaa_base_path}/{file}")
+            # save the file to csv format
+            data.to_csv(f"{noaa_out_path}/{file.replace('.dly', '.csv')}", index=False)
+            print(f"Processed {file} into {file.replace('.dly', '.csv')}")
