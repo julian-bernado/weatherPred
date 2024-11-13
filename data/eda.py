@@ -13,7 +13,7 @@ noaa_files = os.listdir(noaa_data_path)
 # function to perform EDA on the NOAA GHCN-DAILY climate dataset.
 def eda_noaa_climate_data(file_path: str):
     """
-    :param file_path (str): Path to the CSV file containing the climate data for a specific city.
+    :param file_path: Path to the CSV file containing the climate data for a specific city.
     :returns: None
     """
     ### Processing
@@ -125,7 +125,9 @@ def eda_noaa_climate_data(file_path: str):
 
 if __name__ == '__main__':
     for file in noaa_files:
-      print(f"Running EDA for {file}")
-      eda_noaa_climate_data(os.path.join(noaa_data_path, file))
+        # Run EDA for each file if does not contain 'stations' in the name
+        if not 'stations' in file:
+            print(f"Running EDA for {file}")
+            eda_noaa_climate_data(os.path.join(noaa_data_path, file))
 
 
