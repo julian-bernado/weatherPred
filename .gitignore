@@ -490,3 +490,4 @@ cython_debug/
 *.iws
 *.ipr
 /data/raw_data
+/notebooks
