@@ -71,6 +71,15 @@ eda:
 	$(PYTHON) $(DATA_DIR)/eda.py
 
 # ========================================
+# process_data Target: runs data processing scripts (feature_engineering.py)
+# ========================================
+process_data:
+	@echo "Removing processed data..."
+	rm -rf $(DATA_DIR)/processed_data
+	@echo "Running feature_engineering.py..."
+	$(PYTHON) $(DATA_DIR)/feature_engineering.py
+
+# ========================================
 # Clean Target
 # ========================================
 clean:

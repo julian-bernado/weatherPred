@@ -491,3 +491,4 @@ cython_debug/
 *.ipr
 /data/raw_data
 /notebooks
+/data/processed_data
