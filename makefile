@@ -5,7 +5,7 @@
 # ========================================
 
 # Directories
-MODEL_DIR := model
+MODEL_DIR := models
 PREDICTIONS_DIR := predictions
 DATA_DIR := data
 
