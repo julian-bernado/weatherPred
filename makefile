@@ -51,15 +51,24 @@ raw_data:
 	$(PYTHON) $(DATA_DIR)/scraper.py
 
 # ========================================
-# process_data Target: runs data processing scripts (noaa_converter.py)
+# convert_data Target: runs data conversion scripts (noaa_converter.py)
 # ========================================
 convert_data:
-	@echo "Removing processed data..."
+	@echo "Removing converted data..."
 	rm -rf $(DATA_DIR)/raw_data/noaa/to_csv
 	@echo "Running noaa_converter.py..."
 	$(PYTHON) $(DATA_DIR)/noaa_converter.py
 
 data: raw_data convert_data
+
+# ========================================
+# EDA Target: runs EDA script (eda.py)
+# ========================================
+eda:
+	@echo "Removing EDA plots..."
+	rm -rf $(DATA_DIR)/plots
+	@echo "Running eda.py..."
+	$(PYTHON) $(DATA_DIR)/eda.py
 
 # ========================================
 # Clean Target
