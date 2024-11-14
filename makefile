@@ -8,6 +8,7 @@
 MODEL_DIR := models
 PREDICTIONS_DIR := predictions
 DATA_DIR := data
+IMAGE_DIR := images
 
 # Python Script and Output
 PREDICT_SCRIPT := $(MODEL_DIR)/test_predictions.py
@@ -66,7 +67,7 @@ data: raw_data convert_data
 # ========================================
 eda:
 	@echo "Removing EDA plots..."
-	rm -rf $(DATA_DIR)/plots
+	rm -rf $(IMAGE_DIR)/plots
 	@echo "Running eda.py..."
 	$(PYTHON) $(DATA_DIR)/eda.py
 
@@ -86,6 +87,8 @@ clean:
 	@echo "Removing raw and processed data..."
 	rm -rf $(DATA_DIR)/raw_data
 	rm -rf $(DATA_DIR)/processed_data
+	@echo "Removing EDA plots..."
+	rm -rf $(IMAGE_DIR)/plots
 	@echo "Removing $(OUTPUT_FILE)..."
 	rm -f $(OUTPUT_FILE)
 

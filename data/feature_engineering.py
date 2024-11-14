@@ -63,8 +63,9 @@ if __name__ == "__main__":
         os.makedirs(out_path)
 
     for file in noaa_files:
-        engineered_data = feature_engineering_noaa_climate_data(os.path.join(noaa_data_path, file))
-        # Save the feature-engineered data to a new CSV file
-        engineered_data.to_csv(f"{out_path}/{file}", index=False)
-
-
+        # Skip the stations file
+        if not 'stations' in file:
+            # Perform feature engineering on the climate data
+            engineered_data = feature_engineering_noaa_climate_data(os.path.join(noaa_data_path, file))
+            # Save the feature-engineered data to a new CSV file
+            engineered_data.to_csv(f"{out_path}/{file}", index=False)

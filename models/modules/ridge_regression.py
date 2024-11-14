@@ -1,5 +1,5 @@
 # base model: Ridge Regression
-# for each weather station, we train a separate base model
+# for each weather station, we train a separate base model that predicts TMIN, TMAX, and TAVG
 # hyperparameter alpha is tuned by cross-validation
 
 import numpy as np
@@ -18,7 +18,7 @@ class RidgeRegressor:
         """
         fit the model
         :param X: array-like of shape (n_samples, n_features)
-        :param y: array-like of shape (n_samples,)
+        :param y: array-like of shape (n_samples, 3)
         :return: None
         """
         self.model.fit(X, y)
@@ -27,7 +27,7 @@ class RidgeRegressor:
         """
         predict the target
         :param X: array-like of shape (n_samples, n_features)
-        :return: array-like of shape (n_samples,)
+        :return: array-like of shape (n_samples, 3)
         """
         return self.model.predict(X)
 
@@ -35,7 +35,7 @@ class RidgeRegressor:
         """
         return the MSE of the model on the given data
         :param X: array-like of shape (n_samples, n_features)
-        :param y: array-like of shape (n_samples,)
+        :param y: array-like of shape (n_samples, 3)
         :return: float
         """
         return np.mean((self.predict(X) - y) ** 2)

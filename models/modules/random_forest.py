@@ -1,5 +1,5 @@
 # base model: Random Forest
-# for each weather station, we train a separate base model
+# for each weather station, we train a separate base model that predicts TMIN, TMAX, and TAVG
 # hyperparameters are tuned by cross-validation
 
 import numpy as np
@@ -22,9 +22,9 @@ class RandomForest:
 
     def fit(self, X: np.ndarray, y: np.ndarray) -> None:
         """
-        fit the model
+        fit the model that predicts the 3 target variables
         :param X: array-like of shape (n_samples, n_features)
-        :param y: array-like of shape (n_samples,)
+        :param y: array-like of shape (n_samples, 3)
         :return: None
         """
         self.model.fit(X, y)
