@@ -5,6 +5,7 @@ import numpy as np
 from models.modules.ridge_regression import RidgeRegressor
 from models.modules.random_forest import RandomForest
 import pickle
+import time
 
 class MultiStationModel:
     def __init__(self, model_name: str, **kwargs) -> None:
@@ -25,13 +26,16 @@ class MultiStationModel:
         """
         for station, (X, y) in data.items():
             if self.model_name == 'ridge':
-                model = RidgeRegressor(**self.kwargs)
+                station_model = RidgeRegressor(**self.kwargs)
             elif self.model_name == 'random_forest':
-                model = RandomForest(**self.kwargs)
+                station_model = RandomForest(**self.kwargs)
             else:
                 raise ValueError('Invalid name')
-            model.fit(X, y)
-            self.models[station] = model
+            # time to fit the model
+            start_time = time.time()
+            station_model.fit(X, y)
+            print(f"Model for station {station} fitted in {time.time() - start_time} seconds")
+            self.models[station] = station_model
 
     def predict(self, X: dict) -> dict:
         """

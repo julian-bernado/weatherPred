@@ -35,7 +35,8 @@ class RandomForest:
         :param X: array-like of shape (n_samples, n_features)
         :return: array-like of shape (n_samples,)
         """
-        return self.model.predict(X)
+        # round to 2 decimal places
+        return self.model.predict(X).round(2)
 
     def evaluate(self, X: np.ndarray, y: np.ndarray) -> float:
         """
