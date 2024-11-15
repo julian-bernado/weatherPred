@@ -57,8 +57,9 @@ raw_data:
 convert_data:
 	@echo "Removing converted data..."
 	rm -rf $(DATA_DIR)/raw_data/noaa/to_csv
-	@echo "Running noaa_converter.py..."
-	$(PYTHON) $(DATA_DIR)/noaa_converter.py
+	rm -rf $(DATA_DIR)/raw_data/weather_gov/to_csv
+	@echo "Running converter.py..."
+	$(PYTHON) $(DATA_DIR)/converter.py
 
 data: raw_data convert_data
 

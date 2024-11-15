@@ -53,7 +53,7 @@ class MultiStationModel:
         errors = []
         for station, (X, y) in data.items():
             errors.append(self.models[station].evaluate(X, y))
-        return np.mean(errors)
+        return np.mean(errors).item()
 
     def get_params(self) -> dict:
         """

@@ -3,6 +3,7 @@
 # Importing libraries
 import os
 import requests
+import time
 
 # Dictionary mapping city names to airport codes
 city_to_airport = {
@@ -90,11 +91,41 @@ def get_noaa_stations_gps(filepath: str = 'raw_data/noaa') -> None:
         f.write(response.content)
     print("Downloaded NOAA station metadata")
 
+# Function to scrape weather.gov last 3 days of data
+def weather_gov_scraper(filepath: str = 'raw_data/weather_gov') -> None:
+    """
+    :param filepath:
+    :return:
+    """
+    # Base URL for the NOAA data
+    weather_gov_url = 'https://forecast.weather.gov/data/obhistory/'
+    # Create the output directory if it doesn't exist
+    if not os.path.exists(filepath):
+        os.makedirs(filepath)
+    # full ulr has the form: https://forecast.weather.gov/data/obhistory/{airport_code}.html
+    # Loop over the city names and airport codes
+    for city, airport in city_to_airport.items():
+        print(f"Downloading last 3 days of data for {city}")
+        url = f"{weather_gov_url}/{airport}.html"
+        # Download the data
+        response = requests.get(url)
+        # Save the data to a .csv file
+        with open(f"{filepath}/{airport}.html", 'wb') as f:
+            f.write(response.content)
+    print("Downloaded last 3 days of data from weather.gov")
+
 
 if __name__ == '__main__':
+    # Scraping time
+    start_time = time.time()
     # Base path for the NOAA data (get folder in which this file is located)
     out_noaa_path = os.path.join(os.path.dirname(__file__), 'raw_data/noaa')
+    out_weather_gov_path = os.path.join(os.path.dirname(__file__), 'raw_data/weather_gov')
     # Run the scraper
     noaa_scraper(out_noaa_path)
     # Run the station metadata downloader
     get_noaa_stations_gps(out_noaa_path)
+    # Run the weather.gov scraper
+    weather_gov_scraper(out_weather_gov_path)
+    # Print the time taken
+    print(f"Time taken: {time.time() - start_time:.2f} seconds")

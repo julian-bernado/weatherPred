@@ -3,9 +3,7 @@
 # trains the model and saves it to disk
 
 import os
-import numpy as np
-import pandas as pd
-from sklearn.model_selection import train_test_split
+from models.utils import folder_to_data_dict
 from models.model import MultiStationModel
 
 # get current path, move up one directory, and then into the data folder
@@ -13,33 +11,37 @@ in_data_filepath = os.path.join(os.path.dirname(__file__), "../data/processed_da
 # get current path, move up one directory, and then into the saved_models folder
 out_model_filepath = os.path.join(os.path.dirname(__file__), "../saved_models/")
 
-# function to construct data structure for the model
-# takes in list of files and returns a dictionary of data {station: (X, y) for station in stations}
-def folder_to_data_dict(files: list) -> dict:
-    data = {}
-    for f in files:
-        # read in the data
-        df = pd.read_csv(os.path.join(in_data_filepath, f))
-        # get the station id: filename is of the form "station_id.csv"
-        station = f.split(".")[0]
-        # drop the TMIN, TMAX, and TAVG columns
-        X = df.drop(columns=["TMIN", "TMAX", "TAVG"])
-        # get the target variables
-        y = df[["TMIN", "TMAX", "TAVG"]]
-        # add the data to the dictionary
-        data[station] = (X, y)
-    return data
-
 
 if __name__ == "__main__":
     # get the list of files in the data folder
     files = os.listdir(in_data_filepath)
+    # remove any non-csv files and join the file names with the path
+    files = [os.path.join(in_data_filepath, f) for f in files if f.endswith(".csv")]
     # construct the data dictionary
     data = folder_to_data_dict(files)
+
+    # construct train and test data
+    train_data = {}
+    test_data = {}
+    for station in data:
+        X, y = data[station]
+        # get the all but the last 5 rows of the data
+        X_train = X.iloc[:-5]
+        y_train = y.iloc[:-5]
+        # get the last 5 rows of the data
+        X_eval = X.tail(5)
+        y_eval = y.tail(5)
+        # add to the training data
+        train_data[station] = (X_train, y_train)
+        # add to the evaluation data
+        test_data[station] = (X_eval, y_eval)
 
     # initialize the model
     model = MultiStationModel(model_name="random_forest", n_estimators=100, min_samples_leaf=2, max_features=None)
     # fit the model to the data
-    model.fit(data)
+    model.fit(train_data)
+    # evaluate the model
+    mse = model.evaluate(test_data)
+    print(f"Mean squared error: {mse}")
     # save the model to disk
     model.save(os.path.join(out_model_filepath, "model.pkl"))
