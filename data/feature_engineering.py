@@ -8,7 +8,7 @@ noaa_data_path = os.path.join(os.path.dirname(__file__), 'raw_data/noaa/to_csv')
 out_path = os.path.join(os.path.dirname(__file__), 'processed_data')
 noaa_files = os.listdir(noaa_data_path)
 
-# function to perform feature engineering on each city's climate dataset that was converted to .csv.
+# function to perform feature engineering on each city's NOAA climate dataset that was converted to .csv.
 def feature_engineering_noaa_climate_data(file_path: str) -> pd.DataFrame:
     """
     :param file_path: Path to the CSV file containing the climate data for a specific city.
@@ -65,7 +65,25 @@ def feature_engineering_noaa_climate_data(file_path: str) -> pd.DataFrame:
     # Drop all observations with missing values
     df = df.dropna()
 
+    # Re-order columns so today's climate variables and negative lags are at the beginning
+    df = df[[item for sublist in [
+        ['TMIN', 'TMAX', 'TAVG'],  # Basic variables
+        *[
+            [f'TMIN_lag_{i}', f'TAVG_lag_{i}', f'TMAX_lag_{i}']
+            for i in range(-1, -5, -1)
+        ],  # Negative lags
+        *[
+            [f'TMIN_lag_{i}', f'TAVG_lag_{i}', f'TMAX_lag_{i}', f'PRCP_lag_{i}']
+            for i in range(1, 31)
+        ],  # Positive lags
+        [
+            f'{var}_mean_5d_window' for var in climate_vars
+        ],  # Mean window variables
+        ['YEAR', 'MONTH', 'DAY_OF_YEAR', 'WEEK_OF_YEAR', 'SEASON'],  # Time features
+    ] for item in sublist]]
+
     return df
+
 
 if __name__ == "__main__":
     # create the output directory if it doesn't exist
