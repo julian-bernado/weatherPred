@@ -29,6 +29,8 @@ def feature_engineering_noaa_climate_data(file_path: str) -> pd.DataFrame:
 
     # Add year, month columns for plotting
     df['YEAR'] = df['DATE'].dt.year
+    # Drop all observations before Year 2013
+    df = df[df['YEAR'] >= 2013]
     df['MONTH'] = df['DATE'].dt.month
 
     # Add a column for the day of the year
@@ -37,23 +39,29 @@ def feature_engineering_noaa_climate_data(file_path: str) -> pd.DataFrame:
     # Add a column for the week of the year
     df['WEEK_OF_YEAR'] = df['DATE'].dt.isocalendar().week
 
-    # Add a column for the quarter
-    df['QUARTER'] = df['DATE'].dt.quarter
-
     # Add a column for the season
     df['SEASON'] = (df['DATE'].dt.month % 12 + 3) // 3
-    season_map = {1: 'Winter', 2: 'Spring', 3: 'Summer', 4: 'Fall'}
-    df['SEASON'] = df['SEASON'].map(season_map)
+    # season_map = {1: 'Winter', 2: 'Spring', 3: 'Summer', 4: 'Fall'}
 
     # Add columns for lagged versions of the climate variables
     for var in climate_vars:
-        for i in range(1, 31):
-            df[f'{var}_lag_{i}'] = df[var].shift(i)
+        # Create a dictionary of lagged columns
+        lagged_columns = {f'{var}_lag_{i}': df[var].shift(i) for i in range(1, 30 + 1)}
+
+        # Convert dictionary to DataFrame and concatenate
+        lagged_df = pd.DataFrame(lagged_columns)
+        df = pd.concat([df, lagged_df], axis=1)
 
     # Add columns for the mean over a 5-day window for each climate variable
     # based on the values of this window last year
     for var in climate_vars:
         df[f'{var}_mean_5d_window'] = df[var].shift(365).rolling(window=5).mean()
+
+    # Convert all values in the df to float
+    df = df.drop('DATE', axis=1).astype(float)
+
+    # Drop all observations with missing values
+    df = df.dropna()
 
     return df
 
