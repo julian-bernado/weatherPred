@@ -45,12 +45,14 @@ def feature_engineering_noaa_climate_data(file_path: str) -> pd.DataFrame:
 
     # Add columns for lagged versions of the climate variables
     for var in climate_vars:
-        # Create a dictionary of lagged columns
-        lagged_columns = {f'{var}_lag_{i}': df[var].shift(i) for i in range(1, 30 + 1)}
-
-        # Convert dictionary to DataFrame and concatenate
-        lagged_df = pd.DataFrame(lagged_columns)
-        df = pd.concat([df, lagged_df], axis=1)
+        # Create a dictionary of forward and backward lagged columns
+        # Forward lags are for multi-day out prediction, backward lags are predictors
+        backward_lagged_columns = {f'{var}_lag_{i}': df[var].shift(i) for i in range(1, 30 + 1)}
+        forward_lagged_columns = {f'{var}_lag_{i}': df[var].shift(i) for i in range(-1, -4 - 1, -1)}
+        # Convert dictionaries to DataFrame and concatenate
+        backward_lagged_df = pd.DataFrame(backward_lagged_columns)
+        forward_lagged_df = pd.DataFrame(forward_lagged_columns)
+        df = pd.concat([df, backward_lagged_df, forward_lagged_df], axis=1)
 
     # Add columns for the mean over a 5-day window for each climate variable
     # based on the values of this window last year
