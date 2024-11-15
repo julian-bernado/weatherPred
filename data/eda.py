@@ -49,7 +49,7 @@ def eda_noaa_climate_data(file_path: str):
     df['MONTH'] = df['DATE'].dt.month 
     
     # Plot patterns in missingness over time
-    missing_by_year = df.groupby('YEAR').apply(lambda x : x.isna().mean()).drop(['YEAR', 'MONTH'], axis=1)
+    missing_by_year = df.groupby('YEAR').apply(lambda x : x.isna().mean(), include_groups=False).drop(['MONTH'], axis=1)
     missing_by_year.plot(kind='line', marker='o', figsize=(10, 6))
     plt.xlabel('Year')
     plt.ylabel('Proportion of Missing Values')
@@ -72,7 +72,7 @@ def eda_noaa_climate_data(file_path: str):
         #plt.savefig(f'data/plots/climate_time/{var}_{city_code}_daily_plt.png', format='png', dpi=300)
 
     # Monthly series plot for each climate variable
-    df_monthly_avg = df.groupby('MONTH').apply(lambda x : x.mean())
+    df_monthly_avg = df.groupby('MONTH')[climate_vars + ['MONTH']].apply(lambda x : x.mean())
     for var in climate_vars:
         plt.figure(figsize=(15, 6))
         plt.plot(df_monthly_avg['MONTH'], df_monthly_avg[var])
@@ -83,7 +83,7 @@ def eda_noaa_climate_data(file_path: str):
         #plt.savefig(f'data/plots/climate_time/{var}_{city_code}_monthly_plt.png', format='png', dpi=300)
 
     # Yearly series plot for each climate variable
-    df_yearly_avg = df.groupby('YEAR').apply(lambda x : x.mean())
+    df_yearly_avg = df.groupby('YEAR')[climate_vars + ['YEAR']].apply(lambda x : x.mean())
     for var in climate_vars:
         plt.figure(figsize=(15, 6))
         plt.plot(df_yearly_avg['YEAR'], df_yearly_avg[var])
