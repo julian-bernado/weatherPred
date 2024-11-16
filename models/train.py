@@ -14,7 +14,7 @@ out_model_filepath = os.path.join(os.path.dirname(__file__), "../saved_models/")
 
 
 if __name__ == "__main__":
-    train_flag = False
+    train_flag = True
 
     # get the list of files in the data folder
     files = os.listdir(in_data_filepath)
@@ -67,5 +67,5 @@ if __name__ == "__main__":
     for station in predictions:
         print(f"Station: {station} \n"
               f"Predicted - Actual: {predictions[station] - last_day_y[station]}")
-    # save the model to disk
+    # save theR model to disk
     model.save(os.path.join(out_model_filepath, "model.pkl"))
