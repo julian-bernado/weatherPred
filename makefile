@@ -6,6 +6,7 @@
 
 # Directories
 MODEL_DIR := models
+SAVED_MODELS_DIR := saved_models
 PREDICTIONS_DIR := predictions
 DATA_DIR := data
 IMAGE_DIR := images
@@ -25,7 +26,7 @@ DOCKER_FULL_TAG := $(DOCKER_IMAGE):$(DOCKER_TAG)
 # ========================================
 # Phony Targets
 # ========================================
-.PHONY: all predictions clean docker-pull docker-push raw_data convert_data
+.PHONY: all predictions clean cv docker-pull docker-push raw_data convert_data
 
 # ========================================
 # Default Target
@@ -41,6 +42,14 @@ predictions: $(OUTPUT_FILE)
 $(OUTPUT_FILE): $(PREDICT_SCRIPT)
 	@$(PYTHON) $(PREDICT_SCRIPT)
 	@cat $(OUTPUT_FILE)
+
+# ========================================
+# Cross Validation Target
+# ========================================
+cv: $(SAVED_MODELS_DIR)/final_model.pkl
+
+$(SAVED_MODELS_DIR)/final_model.pkl: $(MODEL_DIR)/evaluation/grid_search.py
+	$(PYTHON) -m $(MODEL_DIR).evaluation.grid_search
 
 # ========================================
 # Raw Data Target: deletes raw_data if it exists and runs scraper.py
@@ -92,6 +101,9 @@ clean:
 	rm -rf $(IMAGE_DIR)/plots
 	@echo "Removing $(OUTPUT_FILE)..."
 	rm -f $(OUTPUT_FILE)
+	@echo "Removing cross validation CSVs"
+	rm -f models/evaluation/evaluation_results/random_forest_hyperparameters.csv
+	rm -f models/evaluation/evaluation_results/ridge_hyperparameters.csv
 
 # ========================================
 # Docker Pull Target
