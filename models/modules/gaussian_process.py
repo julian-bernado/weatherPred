@@ -1,22 +1,31 @@
-# base model: Ridge Regression
+# base model: Gaussian Process Regression
 # for each weather station, we train a separate base model that predicts 5 days of TMIN, TMAX, and TAVG
-# hyperparameter alpha is tuned by cross-validation
-
+# hyperparameters are tuned by cross-validation
 import numpy as np
-from sklearn.linear_model import Ridge
+from sklearn.gaussian_process import GaussianProcessRegressor
+from sklearn.gaussian_process.kernels import RBF, WhiteKernel, Matern, Sum
 
-class RidgeRegressor:
-    def __init__(self, alpha: float = 1.0) -> None:
+class GaussianProcess:
+    def __init__(self, kernel: str = 'rbf', sigma: float = 1e-10) -> None:
         """
         initialize the model
-        :param alpha: regularization strength
+        :param kernel: kernel function
+        :param sigma: noise level
         """
-        self.alpha = alpha
-        self.model = Ridge(alpha=self.alpha)
+        self.kernel = kernel
+        self.sigma = sigma
+        if self.kernel == 'rbf':
+            sum_kernel = Sum(RBF(), WhiteKernel(noise_level=self.sigma))
+            self.model = GaussianProcessRegressor(kernel=sum_kernel)
+        elif self.kernel == 'matern':
+            sum_kernel = Sum(Matern(), WhiteKernel(noise_level=self.sigma))
+            self.model = GaussianProcessRegressor(kernel=sum_kernel)
+        else:
+            raise ValueError('Invalid kernel function')
 
     def fit(self, X: np.ndarray, y: np.ndarray) -> None:
         """
-        fit the model
+        fit the model that predicts the 15 target variables
         :param X: array-like of shape (n_samples, n_features)
         :param y: array-like of shape (n_samples, 15)
         :return: None
@@ -29,7 +38,8 @@ class RidgeRegressor:
         :param X: array-like of shape (n_samples, n_features)
         :return: array-like of shape (n_samples, 15)
         """
-        return self.model.predict(X)
+        # round to 2 decimal places
+        return self.model.predict(X).round(2)
 
     def evaluate(self, X: np.ndarray, y: np.ndarray) -> float:
         """
@@ -47,11 +57,11 @@ class RidgeRegressor:
         """
         return self.model.get_params()
 
-    def set_params(self, **params) -> 'RidgeRegressor':
+    def set_params(self, **params) -> 'GaussianProcess':
         """
         set model parameters
         :param params: dict
-        :return:
+        :return: GaussianProcess
         """
         self.model.set_params(**params)
         return self

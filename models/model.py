@@ -4,6 +4,7 @@
 import numpy as np
 from models.modules.ridge_regression import RidgeRegressor
 from models.modules.random_forest import RandomForest
+from models.modules.gaussian_process import GaussianProcess
 import pickle
 import time
 
@@ -29,12 +30,14 @@ class MultiStationModel:
                 station_model = RidgeRegressor(**self.kwargs)
             elif self.model_name == 'random_forest':
                 station_model = RandomForest(**self.kwargs)
+            elif self.model_name == 'gaussian_process':
+                station_model = GaussianProcess(**self.kwargs)
             else:
                 raise ValueError('Invalid name')
             # time to fit the model
             start_time = time.time()
             station_model.fit(X, y)
-            print(f"Model for station {station} fitted in {time.time() - start_time} seconds")
+            print(f"{self.model_name} Model for station {station} fitted in {time.time() - start_time} seconds")
             self.models[station] = station_model
 
     def predict(self, X: dict) -> dict:
@@ -84,7 +87,6 @@ class MultiStationModel:
         with open(path, 'wb') as f:
             # noinspection PyTypeChecker
             pickle.dump(self, f)
-
 
     @staticmethod
     def load(path: str) -> 'MultiStationModel':

@@ -1,5 +1,5 @@
 # base model: Random Forest
-# for each weather station, we train a separate base model that predicts TMIN, TMAX, and TAVG
+# for each weather station, we train a separate base model that predicts 5 days of TMIN, TMAX, and TAVG
 # hyperparameters are tuned by cross-validation
 
 import numpy as np
@@ -22,9 +22,9 @@ class RandomForest:
 
     def fit(self, X: np.ndarray, y: np.ndarray) -> None:
         """
-        fit the model that predicts the 3 target variables
+        fit the model that predicts the 15 target variables
         :param X: array-like of shape (n_samples, n_features)
-        :param y: array-like of shape (n_samples, 3)
+        :param y: array-like of shape (n_samples, 15)
         :return: None
         """
         self.model.fit(X, y)
@@ -33,7 +33,7 @@ class RandomForest:
         """
         predict the target
         :param X: array-like of shape (n_samples, n_features)
-        :return: array-like of shape (n_samples,)
+        :return: array-like of shape (n_samples, 15)
         """
         # round to 2 decimal places
         return self.model.predict(X).round(2)
@@ -42,10 +42,10 @@ class RandomForest:
         """
         return the MSE of the model on the given data
         :param X: array-like of shape (n_samples, n_features)
-        :param y: array-like of shape (n_samples,)
+        :param y: array-like of shape (n_samples, 15)
         :return: float
         """
-        return np.mean((self.predict(X) - y) ** 2)
+        return np.mean((self.predict(X) - y) ** 2).item()
 
     def get_params(self) -> dict:
         """

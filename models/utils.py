@@ -2,6 +2,12 @@ import pandas as pd
 
 
 def folder_to_data_dict(filepaths: list) -> dict:
+    """
+    Read in the data from the given list of filepaths and return a dictionary.
+    Targets are in the first 15 columns and features are in the rest
+    :param filepaths: list of filepaths of station datasets
+    :return: dictionary of data {station_id: (X, y)}
+    """
     data = {}
     for f in filepaths:
         # read in the data
