@@ -1,24 +1,26 @@
 # base model: Gaussian Process Regression
 # for each weather station, we train a separate base model that predicts 5 days of TMIN, TMAX, and TAVG
-# hyperparameters are tuned by cross-validation
+# hyperparameter length_scale and noise_level are tuned by cross-validation
 import numpy as np
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF, WhiteKernel, Matern, Sum
 
 class GaussianProcess:
-    def __init__(self, kernel: str = 'rbf', sigma: float = 1e-10) -> None:
+    def __init__(self, kernel: str = 'rbf', length_scale: float = 1.0, sigma: float = 10e-6) -> None:
         """
         initialize the model
         :param kernel: kernel function
+        :param length_scale: length scale
         :param sigma: noise level
         """
         self.kernel = kernel
         self.sigma = sigma
+        self.length_scale = length_scale
         if self.kernel == 'rbf':
-            sum_kernel = Sum(RBF(), WhiteKernel(noise_level=self.sigma))
+            sum_kernel = Sum(RBF(self.length_scale), WhiteKernel(noise_level=self.sigma))
             self.model = GaussianProcessRegressor(kernel=sum_kernel)
         elif self.kernel == 'matern':
-            sum_kernel = Sum(Matern(), WhiteKernel(noise_level=self.sigma))
+            sum_kernel = Sum(Matern(length_scale=self.length_scale), WhiteKernel(noise_level=self.sigma))
             self.model = GaussianProcessRegressor(kernel=sum_kernel)
         else:
             raise ValueError('Invalid kernel function')
