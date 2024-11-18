@@ -2,6 +2,7 @@
 import os
 import itertools
 import random
+import time
 import numpy as np
 import pandas as pd
 
@@ -48,9 +49,11 @@ ridge_hyperparameters = pd.DataFrame(ridge_hyperparameters["alpha"], columns=["a
 
 if __name__ == "__main__":
 
+    print("Beginning cross validation")
+    time1 = time.time()
     # Fill out ridge hyperparameter df and save it
     ridge_hyperparameters["MSE"] = ridge_hyperparameters.apply(
-        lambda row: cv_slide(model_name="ridge", hyperparameters=row.to_dict(), cv_length=2),
+        lambda row: cv_slide(model_name="ridge", hyperparameters=row.to_dict(), cv_length=30),
         axis=1
     )
 
@@ -58,7 +61,7 @@ if __name__ == "__main__":
 
     # Fill out random forest hyperparameter df and save it
     random_forest_hyperparameters["MSE"] = random_forest_hyperparameters.apply(
-        lambda row: cv_slide(model_name="random_forest", hyperparameters=row.to_dict(), cv_length=2),
+        lambda row: cv_slide(model_name="random_forest", hyperparameters=row.to_dict(), cv_length=30),
         axis=1
     )
 
@@ -78,6 +81,7 @@ if __name__ == "__main__":
         final_model = MultiStationModel(model_name="ridge",
                                         alpha=min_ridge["alpha"])
 
+    print(f"model search complete in {time.time() - time1} seconds")
     # Fit the final model
     final_model.fit(data)
     final_model.save(out_model_filepath + "final_model.pkl")
