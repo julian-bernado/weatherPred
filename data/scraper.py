@@ -92,7 +92,7 @@ def get_noaa_stations_gps(filepath: str = 'raw_data/noaa') -> None:
     print("Downloaded NOAA station metadata")
 
 # Function to scrape weather.gov last 3 days of data
-def weather_gov_scraper(filepath: str = 'raw_data/weather_gov') -> None:
+def weather_gov_scraper(filepath: str = 'raw_data/weather_gov', verbose = True) -> None:
     """
     :param filepath:
     :return:
@@ -105,14 +105,16 @@ def weather_gov_scraper(filepath: str = 'raw_data/weather_gov') -> None:
     # full ulr has the form: https://forecast.weather.gov/data/obhistory/{airport_code}.html
     # Loop over the city names and airport codes
     for city, airport in city_to_airport.items():
-        print(f"Downloading last 3 days of data for {city}")
+        if verbose:
+            print(f"Downloading last 3 days of data for {city}")
         url = f"{weather_gov_url}/{airport}.html"
         # Download the data
         response = requests.get(url)
         # Save the data to a .csv file
         with open(f"{filepath}/{airport}.html", 'wb') as f:
             f.write(response.content)
-    print("Downloaded last 3 days of data from weather.gov")
+    if verbose:
+        print("Downloaded last 3 days of data from weather.gov")
 
 
 if __name__ == '__main__':

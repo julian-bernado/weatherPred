@@ -33,7 +33,11 @@ all: convert_data process_data cv
 # Predictions Target
 # ========================================
 predictions:
-	@$(PYTHON) -m "predictions.predictions"
+	@rm -f predictions/new_data/*.html
+	@rm -f predictions/new_data/processed/*.csv
+	@rm -f predictions/new_data/to_csv/*.csv
+	@$(PYTHON) -m predictions.download_new
+	@$(PYTHON) -m predictions.predictions
 
 # ========================================
 # Cross Validation Target
@@ -100,6 +104,10 @@ clean:
 	rm -f saved_models/final_model.pkl
 	@echo "Removing intermediate predictions"
 	rm -f predictions/intermediate/*.csv
+	@echo "Removing newest data"
+	rm -f predictions/new_data/*.html
+	rm -f predictions/new_data/to_csv/*.csv
+	rm -f predictions/new_data/processed/*.csv
 
 # ========================================
 # Docker Pull Target

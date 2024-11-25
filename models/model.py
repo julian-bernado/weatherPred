@@ -19,7 +19,7 @@ class MultiStationModel:
         self.models = {}
         self.kwargs = kwargs
 
-    def fit(self, data: dict) -> None:
+    def fit(self, data: dict, verbose = True) -> None:
         """
         Fit the submodels to the data
         :param data: dictionary of tuples {station_s: (X_s, y_s) for s in stations}
@@ -37,7 +37,8 @@ class MultiStationModel:
             # time to fit the model
             start_time = time.time()
             station_model.fit(X, y)
-            print(f"{self.model_name} Model for station {station} fitted in {time.time() - start_time} seconds")
+            if verbose:
+                print(f"{self.model_name} Model for station {station} fitted in {time.time() - start_time} seconds")
             self.models[station] = station_model
 
     def predict(self, X: dict) -> dict:

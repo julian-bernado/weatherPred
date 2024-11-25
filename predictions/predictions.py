@@ -1,6 +1,7 @@
 # predictions.py
 
 import os
+import random
 import numpy as np
 import pandas as pd
 from datetime import datetime
@@ -9,12 +10,28 @@ from models.model import MultiStationModel
 
 # Paths
 base_dir = os.path.dirname("./")
-data_dir = os.path.join(base_dir, 'data', 'processed_data')
+data_dir = os.path.join(base_dir, 'predictions', 'new_data', 'processed')
 model_dir = os.path.join(base_dir, 'saved_models')
 model_path = os.path.join(model_dir, 'final_model.pkl')
 
+# Set seed
+random.seed(604)
+
+# Get list of data files
+files = [os.path.join(data_dir, f) for f in os.listdir(data_dir) if f.endswith('.csv')]
+
+# Use folder_to_data_dict to get the data
+data = folder_to_data_dict(files)
+
+# Prepare to collect all predictions
+all_predictions = []
+
+# Current date
+current_date = datetime.now().strftime("%Y-%m-%d")
+
 # Load the pre-trained model
 model = MultiStationModel.load(model_path)
+model.fit(data, verbose=False)
 
 # List of station codes in the specified order
 stations_order = [
@@ -39,18 +56,6 @@ stations_order = [
     "KSEA",  # Seattle
     "KDCA",  # Washington DC
 ]
-
-# Get list of data files
-files = [os.path.join(data_dir, f) for f in os.listdir(data_dir) if f.endswith('.csv')]
-
-# Use folder_to_data_dict to get the data
-data = folder_to_data_dict(files)
-
-# Prepare to collect all predictions
-all_predictions = []
-
-# Current date
-current_date = datetime.now().strftime("%Y-%m-%d")
 
 # Iterate over each station in the specified order
 for station_code in stations_order:
@@ -86,7 +91,7 @@ if len(all_predictions) != 300:
 
 # Format the output
 formatted_predictions = ', '.join(f"{num:.1f}" if not np.isnan(num) else "NaN" for num in all_predictions)
-output = f'{current_date}, {formatted_predictions}'
+output = f'"{current_date}", {formatted_predictions}'
 
 # Save the output to a CSV file named "predictions_{date}.csv"
 output_csv_filename = f"predictions/intermediate/predictions_{current_date}.csv"

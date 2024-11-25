@@ -97,7 +97,7 @@ def feature_engineering_noaa_climate_data(file_path: str) -> pd.DataFrame:
     return df
 
 # function to perform feature engineering on each city's weather.gov climate dataset that was converted to .csv.
-def feature_engineering_weather_gov_data(file_path: str) -> pd.DataFrame:
+def feature_engineering_weather_gov_data(file_path: str, verbose = True) -> pd.DataFrame:
     """
     :param file_path: Path to the CSV file containing the weather.gov climate data for a specific city.
     :returns: A pandas DataFrame with the feature-engineered climate data.
