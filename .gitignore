@@ -492,3 +492,12 @@ cython_debug/
 /data/raw_data
 /notebooks
 /data/processed_data
+
+# Ignore pickled models
+*.pkl
+
+# Ignore hyperparameter CSVs
+models/evaluation/evaluation_results/*.csv
+
+# Ignore intermediate predictions
+predictions/intermediate/*.csv

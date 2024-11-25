@@ -52,6 +52,11 @@ def sequential_cv(model_name, hyperparameters, shift) -> float:
     elif model_name == "ridge":
         model = MultiStationModel(model_name="ridge",
                                   alpha=hyperparameters["alpha"])
+    elif model_name == "gaussian_process":
+        model = MultiStationModel(model_name="gaussian_process",
+                                  length_scale=hyperparameters["length_scale"],
+                                  sigma=hyperparameters["sigma"],
+                                  kernel=hyperparameters["kernel"])
     else:
         raise Exception("Invalid model name")
 

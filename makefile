@@ -11,10 +11,6 @@ PREDICTIONS_DIR := predictions
 DATA_DIR := data
 IMAGE_DIR := images
 
-# Python Script and Output
-PREDICT_SCRIPT := $(MODEL_DIR)/test_predictions.py
-OUTPUT_FILE := $(PREDICTIONS_DIR)/test_predictions.csv
-
 # Python Interpreter (modify if needed)
 PYTHON := python3
 
@@ -26,22 +22,18 @@ DOCKER_FULL_TAG := $(DOCKER_IMAGE):$(DOCKER_TAG)
 # ========================================
 # Phony Targets
 # ========================================
-.PHONY: all predictions clean cv docker-pull docker-push raw_data convert_data
+.PHONY: all predictions clean cv docker-pull docker-push rawdata convert_data process_data
 
 # ========================================
 # Default Target
 # ========================================
-all: predictions
+all: convert_data process_data cv
 
 # ========================================
 # Predictions Target
 # ========================================
-predictions: $(OUTPUT_FILE)
-
-# Rule to generate the dummy_predict.csv
-$(OUTPUT_FILE): $(PREDICT_SCRIPT)
-	@$(PYTHON) $(PREDICT_SCRIPT)
-	@cat $(OUTPUT_FILE)
+predictions:
+	@$(PYTHON) -m "predictions.predictions"
 
 # ========================================
 # Cross Validation Target
@@ -52,9 +44,9 @@ $(SAVED_MODELS_DIR)/final_model.pkl: $(MODEL_DIR)/evaluation/grid_search.py
 	$(PYTHON) -m $(MODEL_DIR).evaluation.grid_search
 
 # ========================================
-# Raw Data Target: deletes raw_data if it exists and runs scraper.py
+# Raw Data Target: deletes rawdata if it exists and runs scraper.py
 # ========================================
-raw_data:
+rawdata:
 	@echo "Removing raw data..."
 	rm -rf $(DATA_DIR)/raw_data
 	@echo "Running scraper.py..."
@@ -70,7 +62,7 @@ convert_data:
 	@echo "Running converter.py..."
 	$(PYTHON) $(DATA_DIR)/converter.py
 
-data: raw_data convert_data
+data: rawdata convert_data process_data
 
 # ========================================
 # EDA Target: runs EDA script (eda.py)
@@ -94,8 +86,7 @@ process_data:
 # Clean Target
 # ========================================
 clean:
-	@echo "Removing raw and processed data..."
-	rm -rf $(DATA_DIR)/raw_data
+	@echo "Removing processed data..."
 	rm -rf $(DATA_DIR)/processed_data
 	@echo "Removing EDA plots..."
 	rm -rf $(IMAGE_DIR)/plots
@@ -104,6 +95,11 @@ clean:
 	@echo "Removing cross validation CSVs"
 	rm -f models/evaluation/evaluation_results/random_forest_hyperparameters.csv
 	rm -f models/evaluation/evaluation_results/ridge_hyperparameters.csv
+	rm -f models/evalutions/evaluation_results/gp_hyperparameters.csv
+	@echo "Removing saved models"
+	rm -f saved_models/final_model.pkl
+	@echo "Removing intermediate predictions"
+	rm -f predictions/intermediate/*.csv
 
 # ========================================
 # Docker Pull Target
