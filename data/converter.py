@@ -83,7 +83,8 @@ def read_dly_file(file_path: str) -> pd.DataFrame:
         colspecs=data_header_col_specs + data_day_col_specs,
         header=None,
         names=data_header_names + data_day_col_names,
-        dtype=data_dtypes
+        dtype=data_dtypes,
+        encoding ='utf-8'
     )
 
     # drop the flags columns
