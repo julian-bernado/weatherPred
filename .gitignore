@@ -500,7 +500,6 @@ cython_debug/
 models/evaluation/evaluation_results/*.csv
 
 # Ignore intermediate predictions
-predictions/intermediate/*.csv
-predictions/new_data/*.csv
+predictions/new_data/*.html
 predictions/new_data/processed/*.csv
 predictions/new_data/to_csv/*.csv
