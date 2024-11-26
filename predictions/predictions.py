@@ -5,6 +5,7 @@ import random
 import numpy as np
 import pandas as pd
 from datetime import datetime
+from zoneinfo import ZoneInfo
 from models.utils import folder_to_data_dict
 from models.model import MultiStationModel
 
@@ -27,7 +28,8 @@ data = folder_to_data_dict(files)
 all_predictions = []
 
 # Current date
-current_date = datetime.now().strftime("%Y-%m-%d")
+est = ZoneInfo("America/New_York")
+current_date = datetime.now(est).strftime("%Y-%m-%d")
 
 # Load the pre-trained model
 model = MultiStationModel.load(model_path)
