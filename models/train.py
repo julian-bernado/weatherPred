@@ -3,6 +3,9 @@
 # trains the model and saves it to disk
 
 import os
+
+from sympy.abc import alpha
+
 from models.utils import folder_to_data_dict
 from models.model import MultiStationModel
 import time
@@ -49,7 +52,7 @@ if __name__ == "__main__":
     # train the model
     if train_flag:
         # initialize the model
-        model = MultiStationModel(model_name="random_forest", n_estimators=100, min_samples_leaf=2, max_features=None)
+        model = MultiStationModel(model_name="ridge", alpha=615)
         # time to fit the model
         start_time = time.time()
         # fit the model to the data

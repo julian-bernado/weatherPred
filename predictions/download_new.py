@@ -98,10 +98,10 @@ def feature_engineering_noaa_climate_data(file_path: str) -> pd.DataFrame:
     return df
 
 
-weather_gov_raw_path = "predictions/new_data"
-weather_gov_converted_path = "predictions/new_data/to_csv"
-weather_gov_processed_path = "predictions/new_data/processed"
-noaa_converted_file_path = "data/raw_data/noaa/to_csv"
+weather_gov_raw_path = os.path.join(os.path.dirname(__file__), "new_data")
+weather_gov_converted_path = os.path.join(os.path.dirname(__file__), "new_data/to_csv")
+weather_gov_processed_path = os.path.join(os.path.dirname(__file__), "new_data/processed")
+noaa_converted_file_path = os.path.join(os.path.dirname(__file__), "../data/raw_data/noaa/to_csv")
 noaa_files = os.listdir(noaa_converted_file_path)
 
 # create the output directory if it doesn't exist
@@ -115,7 +115,7 @@ if not os.path.exists(weather_gov_processed_path):
     os.makedirs(weather_gov_processed_path)
 
 if __name__ == "__main__":
-    weather_gov_scraper("predictions/new_data", verbose=False)
+    weather_gov_scraper(weather_gov_raw_path, verbose=True)
     for file in os.listdir(weather_gov_raw_path):
         # skip the file if it is a directory
         if os.path.isdir(f"{weather_gov_raw_path}/{file}"):
@@ -125,9 +125,10 @@ if __name__ == "__main__":
             # read the file
             data = html_to_csv(f"{weather_gov_raw_path}/{file}")
             # save the file to csv format
-            data.to_csv(f"{weather_gov_raw_path}/to_csv/{file.replace('.html', '.csv')}", index=False)
+            data.to_csv(f"{weather_gov_converted_path}/{file.replace('.html', '.csv')}", index=False)
 
     for file in noaa_files:
+        print(f"Processing {file}")
         # Skip the stations file
         if 'stations' not in file:
             # Perform feature engineering on the climate data

@@ -19,9 +19,10 @@ class MultiStationModel:
         self.models = {}
         self.kwargs = kwargs
 
-    def fit(self, data: dict, verbose = True) -> None:
+    def fit(self, data: dict, verbose: bool = True) -> None:
         """
         Fit the submodels to the data
+        :param verbose:
         :param data: dictionary of tuples {station_s: (X_s, y_s) for s in stations}
         :return: None
         """
