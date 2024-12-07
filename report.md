@@ -8,9 +8,43 @@
 
 # Models
 
+After gathering and processing our data, we effectively had 20 separate datasets, one for each city. This presented a key modeling choice:
+
+1. **Train a single model** on the combined dataset, leveraging inter-city relationships.  
+2. **Train separate models** for each city, focusing on local weather characteristics.  
+
+While combining datasets may benefit highly expressive models by learning latent inter-city dependencies, the diverse weather patterns across cities (e.g., San Francisco's maritime climate vs. New York City's continental climate) led us to favor city-specific models. Initially, we considered using a **Graph Neural Network (GNN)** to automatically learn latent weather factors and propagate this information across neighboring cities. However, due to time and computational constraints, we opted for simpler, more interpretable models.
+
+## Multi-Station Model Framework
+
+To manage city-specific models efficiently, we developed a `MultiStationModel` class that treats each city’s model as a submodule stored in a dictionary. Each submodule adheres to a unified interface with the following methods:
+
+1. **`fit`**: Train the model on city-specific data.  
+2. **`predict`**: Generate predictions for new data.  
+3. **`evaluate`**: Assess model performance using standard metrics.  
+4. **`get_params`**: Retrieve hyperparameters for tuning or inspection.  
+5. **`set_params`**: Update hyperparameters as needed.
+
+This modular framework allows for streamlined training, prediction, and evaluation across all cities, while supporting easy integration of new models. Batch operations across cities (e.g., training all models with a single function call) further enhance pipeline efficiency. Additionally, this design aligns well with cross-validation procedures, enabling systematic assessment of model performance.
+
+## Models Implemented
+
+We implemented three regression models within this framework:
+
+1. **Ridge Regression**  
+   Ridge regression applies $\ell_2$ regularization to a linear model, controlling overfitting by penalizing large coefficients. This model is particularly well-suited to datasets where linear relationships dominate, offering both simplicity and computational efficiency.  
+
+2. **Random Forest Regression**  
+   Random forests combine predictions from multiple decision trees to model complex, nonlinear relationships. This ensemble approach is robust to overfitting and works well with high-dimensional data, though at the cost of reduced interpretability compared to linear models.
+
+3. **Gaussian Process Regression (GPR)**  
+   GPR is a probabilistic model that provides both predictions and confidence intervals. It is particularly powerful for capturing non-linear patterns, albeit with high computational costs, making it suitable for smaller datasets.
+
+
+
 # Cross-Validation
 
-Given the temporal nature of our data, a simple train-test-split approach was not appropriate. As such, we performed a rolling-window cross-validation approach. In more detail, we would train our model with a given hyperparameter configuration on all days up to some day $d$, then we would predict the five days following $d$. We did this for the final 14 $d$ in our dataset such that we could evaluate our predictions five days out. As such, the size of our sliding window is 5, we slide by 1-day, and we have 14 different folds of cross-validation. Mean squared error across these 14 folds was averaged and reported for each configuration of hyperparamters across the three model. After running cross-validation, our code automatically selects the model and hyperparameter configuration resulting the lowest MSE. Note that since we only have one-layer of cross-validation, we have that our test-set error is lower than what is expected in the actual evaluation. However, since we did not need to estimate our prediction error, we did not nest our cross validation. Cross-validation was conducted sequentially across all cities. While we could have chosen different models or hyperparameter configurations for different cities, for simplicity of the code-base and performance of daily predictions, from cross-validation we extract a single model. It is worthwhile to distinguish though, in-line with the data description above, each mode is only trained on one city.
+Given the temporal nature of our data, a simple train-test-split approach was not appropriate. As such, we performed a rolling-window cross-validation approach. In more detail, we would train our model with a given hyperparameter configuration on all days up to some day $d$, then we would predict the five days following $d$. We did this for the final 14 days $d$ in our dataset such that we could evaluate our predictions five days out. As such, the size of our sliding window is 5, we slide by 1-day, and we have 14 different folds of cross-validation. Mean squared error across these 14 folds was averaged and reported for each configuration of hyperparamters across the three model. After running cross-validation, our code automatically selects the model and hyperparameter configuration resulting the lowest MSE. Note that since we only have one-layer of cross-validation, we have that our test-set error is lower than what is expected in the actual evaluation. However, since we did not need to estimate our prediction error, we did not nest our cross validation. Cross-validation was conducted sequentially across all cities. While we could have chosen different models or hyperparameter configurations for different cities, for simplicity of the code-base and performance of daily predictions, from cross-validation we extract a single model. It is worthwhile to distinguish though, in-line with the data description above, each mode is only trained on one city.
 
 Hyperparameters were tested using a grid approach: for each model we established a range of values for each hyperparameter, then tested each possible combination of hyperparameter values. The grid used for training hyperparameters is displayed below. Initially the grid of hyperparameter choices was denser, but extensive modulation of this grid was done in order to guarantee that training would be completed in 48 hours; training and fitting each model in 20 stations across 14 varying datasets incurred a large computational cost.
 
@@ -34,5 +68,3 @@ A second lesson is that we should plan for "worst" case scenarios when certain f
 As Statisticians, we are often more concerned with the theoretical or methodological questions concerned with our work. However, this experience serves as a humbling reminder that no amount of measure theory can save us from coding errors.
 
 ## Final Remarks
-
- 
