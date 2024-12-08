@@ -1,12 +1,17 @@
 # STATS 604: Project 4 Report
 
+## Julian Bernado, Paolo Borello, Yizhou Gu, Jia Guo, Sam Rosenberg
+
 # Introduction
+The goal of this project is to use statistical techniques to train and evaluate the performance of models used to predict weather in major cities across the United States. A list of 20 cities of interest was selected, forming a representative sample of diverse climates and regions across the country. For each city, the goal is to make weather predictions over more than a week. For each day and each city, we aim to predict the daily minimum, maximum, and average temperatures for one to five days out.
+
+While physics-based models are commonly used for weather prediction, statistical approaches offer numerous benefits as a replacement or supplement to these models. Statistical models are typically more computationally efficient at time of prediction, readily allow for the incorporation of historical data, allow for the incorporation of uncertainty quantification, and can provide additional interpretability.
 
 # Data
 
 We collected data from two sources: the National Oceanic and Atmospheric Administration ([NOAA](https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/all)) and [weather.gov](https://forecast.weather.gov/data/obhistory/). 
 
-We chose this data because it offers reliable, granular, and historical weather information across a wide range of locations, which is essential for building accurate predictive models. NOAA provides comprehensive daily weather datasets in `.dly` format, a robust foundation of standardized and high-quality observations aggregated from multiple sources. These datasets are frequently updated, with past week’s observations refined multiple times to ensure better accuracy. However, NOAA data often excludes the most recent two days of weather records, making it necessary to supplement it with data from weather.gov, which offers near real-time, detailed weather observations. This combination of historical depth and up-to-date information made these sources ideal for our project.
+We chose these datasets because they offer reliable, granular, and historical weather information across a wide range of locations in the United States, which is essential for building accurate predictive models. NOAA provides comprehensive daily weather datasets in `.dly` format, a robust foundation of standardized and high-quality observations aggregated from multiple (30+) sources. These datasets are frequently updated, with past week’s observations refined multiple times to ensure better accuracy. However, NOAA data often excludes the most recent two days of weather records, making it necessary to supplement it with data from weather.gov, which offers near real-time, detailed weather observations. This combination of historical depth and up-to-date information made these sources ideal for our project.
 
 To retrieve the data, we developed custom web scraping scripts for each source. For NOAA, we designed a scraper to download `.dly` files, which are fixed-width format (FWF) files containing daily weather observations. For weather.gov, our scraper fetched the relevant HTML pages containing observational data for various weather stations.
 
@@ -18,7 +23,7 @@ The `.dly` files from NOAA follow a structured, fixed-width format, where each r
 
 The data from weather.gov, on the other hand, is presented as HTML pages, where observational data is updated regularly and includes parameters like temperature, wind speed, humidity, pressure, and visibility. Unlike NOAA’s fixed-width files, the HTML format required extensive preprocessing to extract relevant fields and align them with the NOAA dataset.
 
-Both datasets required rigorous cleaning and validation to handle missing values, inconsistencies in station identifiers, and differences in temporal resolution.
+Both datasets required meticulous cleaning and validation to handle missing values, inconsistencies in station identifiers, and differences in temporal resolution.
 
 # EDA
 
