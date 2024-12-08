@@ -121,3 +121,5 @@ A second lesson is that we should plan for "worst" case scenarios when certain f
 As Statisticians, we are often more concerned with the theoretical or methodological questions concerned with our work. However, this experience serves as a humbling reminder that no amount of measure theory can save us from coding errors.
 
 ## Final Remarks
+
+Though weather prediction is one of the simpler time series prediction tasks due to the (relatively) stationary nature and widespread availability of climate data, this project demonstrates the complexity of building accurate and reliable statistical models. Over the course of this project, we developed our own scrapers to source and clean our own data, performed EDA and feature engineering, trained models and developed our own cross-validation pipeline to evaluate them. The challenges we faced in data collection, cleaning, and modeling underscore the importance of robust data pipelines, thorough EDA, and robust testing of code pre- and post-deployment.
