@@ -4,6 +4,14 @@
 
 # Data
 
+We collected data from two sources: the National Oceanic and Atmospheric Administration ([NOAA](https://www1.ncdc.noaa.gov/pub/data/ghcn/daily/all)) and [weather.gov](https://forecast.weather.gov/data/obhistory/). 
+
+We chose this data because it offers reliable, granular, and historical weather information across a wide range of locations, which is essential for building accurate predictive models. NOAA provides comprehensive daily weather datasets in `.dly` format, a robust foundation of standardized and high-quality observations aggregated from multiple sources. These datasets are frequently updated, with past week’s observations refined multiple times to ensure better accuracy. However, NOAA data often excludes the most recent two days of weather records, making it necessary to supplement it with data from weather.gov, which offers near real-time, detailed weather observations. This combination of historical depth and up-to-date information made these sources ideal for our project.
+
+To retrieve the data, we developed custom web scraping scripts for each source. For NOAA, we designed a scraper to download `.dly` files, which are fixed-width format (FWF) files containing daily weather observations. For weather.gov, our scraper fetched the relevant HTML pages containing observational data for various weather stations.
+
+After collecting the raw data, we implemented a secondary custom script to convert both the `.dly` files and the scraped HTML data into standardized `.csv` files. This conversion involved parsing the FWF structure of the `.dly` files and extracting relevant fields, as well as cleaning and formatting the HTML data into a tabular format. These `.csv` files formed the basis of our exploratory data analysis and modeling pipeline.
+
 # EDA
 
 # Models
@@ -34,12 +42,21 @@ We implemented three regression models within this framework:
 1. **Ridge Regression**  
    Ridge regression applies $\ell_2$ regularization to a linear model, controlling overfitting by penalizing large coefficients. This model is particularly well-suited to datasets where linear relationships dominate, offering both simplicity and computational efficiency.  
 
-2. **Random Forest Regression**  
+2. **Random Forest Regression (RFR)**  
    Random forests combine predictions from multiple decision trees to model complex, nonlinear relationships. This ensemble approach is robust to overfitting and works well with high-dimensional data, though at the cost of reduced interpretability compared to linear models.
 
 3. **Gaussian Process Regression (GPR)**  
    GPR is a probabilistic model that provides both predictions and confidence intervals. It is particularly powerful for capturing non-linear patterns, albeit with high computational costs, making it suitable for smaller datasets.
 
+The parameters to cross-validate for each model are as follows:
+
+| **Model**                | **Parameter**        | **Description**                                      |
+|--------------------------|----------------------|------------------------------------------------------|
+| **Ridge Regression**     | `alpha`              | Regularization strength to control overfitting       |
+| **Random Forest**        | `n_estimators`       | Number of trees in the forest                        |
+|                          | `min_samples_leaf`   | Minimum number of samples required to be a leaf node |
+| **Gaussian Process**     | `kernel`             | Kernel function for covariance                       |
+|                          | `length_scale`       | Characteristic length scale of the kernel            |
 
 
 # Cross-Validation
