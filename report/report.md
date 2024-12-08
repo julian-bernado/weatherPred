@@ -29,7 +29,7 @@ Both datasets required meticulous cleaning and validation to handle missing valu
 
 Our exploratory data analysis (EDA) focused on understanding the structure and characteristics of the weather data for each city, which informed our modeling decisions and feature engineering strategies.
 
-First, we examined the missingness pattern in the data. We observed that TAVG (average daily temperature) has a high proportion (~65-75%) of missing values prior to 2013, which gradually decreases over time. This pattern suggests that imputing missing values for TAVG may be challenging, as the missingness is not random and may be related to external factors like data collection methods or station-specific issues. TMIN (minimum daily temperature), TMAX (maximum daily temperature) and PRCP (precipitation) have lower rates of missingness (~10%). Due to the heavy missingness of TAVG prior to 2013, we only kept data from 2013 onwards for our analysis.
+First, we examined the missingness pattern in the data. We observed that TAVG (average daily temperature) has a high proportion (\~65-75%) of missing values prior to 2013, which gradually decreases over time. This pattern suggests that imputing missing values for TAVG may be challenging, as the missingness is not random and may be related to external factors like data collection methods or station-specific issues. TMIN (minimum daily temperature), TMAX (maximum daily temperature) and PRCP (precipitation) have lower rates of missingness (\~10%). Due to the heavy missingness of TAVG prior to 2013, we only kept data from 2013 onwards for our analysis.
 
 ![KBNA annual missingness plot](/plots/kbna_annual_missingness.png)
 
