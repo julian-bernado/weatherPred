@@ -12,6 +12,14 @@ To retrieve the data, we developed custom web scraping scripts for each source. 
 
 After collecting the raw data, we implemented a secondary custom script to convert both the `.dly` files and the scraped HTML data into standardized `.csv` files. This conversion involved parsing the FWF structure of the `.dly` files and extracting relevant fields, as well as cleaning and formatting the HTML data into a tabular format. These `.csv` files formed the basis of our exploratory data analysis and modeling pipeline.
 
+### Details About the Raw Data
+
+The `.dly` files from NOAA follow a structured, fixed-width format, where each row corresponds to a specific weather station and contains daily observations of multiple weather variables. These include temperature (maximum, minimum, and average), precipitation, snowfall, snow depth, and other meteorological measurements. Each file contains metadata such as the station ID, latitude, longitude, and elevation, providing geographic context for the observations.
+
+The data from weather.gov, on the other hand, is presented as HTML pages, where observational data is updated regularly and includes parameters like temperature, wind speed, humidity, pressure, and visibility. Unlike NOAA’s fixed-width files, the HTML format required extensive preprocessing to extract relevant fields and align them with the NOAA dataset.
+
+Both datasets required rigorous cleaning and validation to handle missing values, inconsistencies in station identifiers, and differences in temporal resolution.
+
 # EDA
 
 # Models
