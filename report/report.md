@@ -103,15 +103,23 @@ Hyperparameters were tested using a grid approach: for each model we established
 
 | **Model**                | **Hyperparameter**        | **Values Tested**                              |
 |--------------------------|---------------------------|------------------------------------------------|
+| **Ridge Regression**     | `alpha`                   | [10<sup>-3</sup> to 10<sup>8</sup>] (20 logarithmic points) |
 | **Random Forest**        | `n_estimators`            | [100, 150, 200]                                |
 |                          | `min_samples_leaf`        | [2, 5, 10]                                     |
 |                          | `max_features`            | ["sqrt"]                                       |
-| **Ridge Regression**     | `alpha`                   | [10^(-3), ..., 10^(8)] (20 logarithmic points) |
 | **Gaussian Process**     | `length_scale`            | [1, 10]                                        |
 |                          | `sigma`                   | [1]                                            |
 |                          | `kernel`                  | ["rbf", "matern"]                              |
 
-We found that ridge regression with a penalty parameter of 615.84 achieved the lowest Root-Mean Squared Error.
+We found that ridge regression with a penalty parameter of 615.84 achieved the lowest Root-Mean Squared Error, and here we exhibit the CV results for all three methods.
+
+| **Model**                | **Parameter**           | **CV Average RMSE (°F)** |
+|--------------------------|-------------------------|--------------------------|
+| **Ridge Regression**     | `alpha = 615.84`        | 6.67                     |
+| **Random Forest**        | `n_estimators = 200`    | 6.87                     |
+|                          | `min_samples_leaf = 10` |                          |
+| **Gaussian Process**     | `kernel = "matern"`     | 7.28                     |
+|                          | `length_scale = 10`     |                          |
 
 # Discussion
 
