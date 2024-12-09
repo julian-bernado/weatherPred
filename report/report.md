@@ -101,13 +101,15 @@ Cross-validation was conducted sequentially across all cities. While we could ha
 
 Hyperparameters were tested using a grid approach: for each model we established a range of values for each hyperparameter, then tested each possible combination of hyperparameter values. The grid used for training hyperparameters is displayed below. Initially the grid of hyperparameter choices was denser, but extensive modulation of this grid was done in order to guarantee that training would be completed in 48 hours; training and fitting each model in 20 stations across 14 varying datasets incurred a large computational cost.
 
-| **Model**                | **Parameter**           | **CV Average RMSE (°F)** |
-|--------------------------|-------------------------|--------------------------|
-| **Ridge Regression**     | `alpha = 615.84`        | 6.67                     |
-| **Random Forest**        | `n_estimators = 200`    | 6.87                     |
-|                          | `min_samples_leaf = 10` |                          |
-| **Gaussian Process**     | `kernel = "matern"`     | 7.28                     |
-|                          | `length_scale = 10`     |                          |
+| **Model**                | **Hyperparameter**        | **Values Tested**                              |
+|--------------------------|---------------------------|------------------------------------------------|
+| **Random Forest**        | `n_estimators`            | [100, 150, 200]                                |
+|                          | `min_samples_leaf`        | [2, 5, 10]                                     |
+|                          | `max_features`            | ["sqrt"]                                       |
+| **Ridge Regression**     | `alpha`                   | [10^(-3), ..., 10^(8)] (20 logarithmic points) |
+| **Gaussian Process**     | `length_scale`            | [1, 10]                                        |
+|                          | `sigma`                   | [1]                                            |
+|                          | `kernel`                  | ["rbf", "matern"]                              |
 
 We found that ridge regression with a penalty parameter of 615.84 achieved the lowest Root-Mean Squared Error.
 
