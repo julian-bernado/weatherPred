@@ -31,15 +31,15 @@ Our exploratory data analysis (EDA) focused on understanding the structure and c
 
 First, we examined the missingness pattern in the data. We observed that TAVG (average daily temperature) has a high proportion (\~65-75%) of missing values prior to 2013, which gradually decreases over time. This pattern suggests that imputing missing values for TAVG may be challenging, as the missingness is not random and may be related to external factors like data collection methods or station-specific issues. TMIN (minimum daily temperature), TMAX (maximum daily temperature) and PRCP (precipitation) have lower rates of missingness (\~10%). Due to the heavy missingness of TAVG prior to 2013, we only kept data from 2013 onwards for our analysis.
 
-![KBNA annual missingness plot](plots/kbna_annual_missingness.png)
+![KBNA annual missingness plot](plots/kbna_annual_missingness.jpg)
 
 Next, we examined the temporal pattern of TMIN, TMAX, TAVG and PRCP. We noticed that the variables of interest displayed clear seasonal trends, and the trends remained consistent across years for each city. This observation led us to incorporate time-related features (e.g., day of the year, month, season) in our modeling pipeline to capture these patterns. Further, since we found that for a given window, the variables of interest are fairly consistent across years, we added the means over a 5-day window in prior year for TMIN, TMAX, TAVG and PRCP as new features.
 
-![KBNA monthly TMAX plot](plots/kbna_monthly_tmax.png)
+![KBNA monthly TMAX plot](plots/kbna_monthly_tmax.jpg)
 
 Finally, we examined the cross-correlation between the weather variables of interest. We observed that TMIN, TMAX, and TAVG are highly correlated with one another and themselves, as expected. PRCP contains more signal for the temperature variables in cities like PNHL (Honolulu), KPDX (Portland), KSAN (San Diego), KSEA (Seattle), and KSFO (San Francisco), which are coastal cities with seasonal rainfall patterns. This observation suggests that PRCP may be a useful feature for predicting temperature variables in these cities. For auto-correlation, we found that the temperature variables have strong auto-correlation up to 30 days, which suggests that incorporating lagged features may improve model performance.
 
-![KSFO cross-correlation plot](plots/ksfo_crosscorrelation.png)
+![KSFO cross-correlation plot](plots/ksfo_crosscorrelation.jpg)
 
 From our EDA, we identified a number of key features to include in our subsequent modeling. These features included time-related variables (day of the year, month, season), lagged features (30 days of lags for TMIN, TAVG, TMAX, and PRCP), as well as historical windowed averages of our climate variables. 
  
