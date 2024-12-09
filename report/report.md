@@ -106,9 +106,7 @@ Hyperparameters were tested using a grid approach: for each model we established
 | **Ridge Regression**     | `alpha`                   | [10<sup>-3</sup> to 10<sup>8</sup>] (20 logarithmic points) |
 | **Random Forest**        | `n_estimators`            | [100, 150, 200]                                |
 |                          | `min_samples_leaf`        | [2, 5, 10]                                     |
-|                          | `max_features`            | ["sqrt"]                                       |
 | **Gaussian Process**     | `length_scale`            | [1, 10]                                        |
-|                          | `sigma`                   | [1]                                            |
 |                          | `kernel`                  | ["rbf", "matern"]                              |
 
 We found that ridge regression with a penalty parameter of 615.84 achieved the lowest Root-Mean Squared Error, and here we exhibit the CV results for all three methods.
@@ -138,5 +136,7 @@ A second lesson is that we should plan for "worst" case scenarios when certain f
 As Statisticians, we are often more concerned with the theoretical or methodological questions concerned with our work. However, this experience serves as a humbling reminder that no amount of measure theory can save us from coding errors.
 
 ## Final Remarks
+
+Following the final lecture of this course, we became aware that our class' group-derived models were generally outperformed by simple historical or next-day models. With this in-mind, it would have been a good idea for us to implement simple models of this form to compare our models against. Given the performance of these simple models, it's unsurprising that ridge regression with a high penalty parameter was the ideal model. We believe that there are two aspects of weather data that make simple predictions of this form powerful: the data's cyclic nature and time-series structure. On the modelling side, this serves as a humbling reminder of the importance of using a simple model to gauge performance of later model iterations. 
 
 Though weather prediction is one of the simpler time series prediction tasks due to the (relatively) stationary nature and widespread availability of climate data, this project demonstrates the complexity of building accurate and reliable statistical models. Over the course of this project, we developed our own scrapers to source and clean our own data, performed EDA and feature engineering, trained models and developed our own cross-validation pipeline to evaluate them. The challenges we faced in data collection, cleaning, and modeling underscore the importance of robust data pipelines, thorough EDA, and robust testing of code pre- and post-deployment.

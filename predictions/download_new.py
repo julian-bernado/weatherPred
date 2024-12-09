@@ -36,9 +36,15 @@ def feature_engineering_noaa_climate_data(file_path: str) -> pd.DataFrame:
     weather_gov_file_path = "predictions/new_data/to_csv/"
     station = file_path[-8:]
     weather_gov_df = feature_engineering_weather_gov_data(weather_gov_file_path + station)
+    print("weather gov")
+    print(weather_gov_df.tail(1))
+    print("noaa")
+    print(noaa_df.tail(1))
 
     # Combine the two datasets
     df = pd.concat([noaa_df, weather_gov_df], axis=0)
+    print("df")
+    print(df.tail(1))
 
     # Add year, month columns for plotting
     df['YEAR'] = df['DATE'].dt.year
